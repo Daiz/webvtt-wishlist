@@ -1,0 +1,415 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<style>
+		.avatar {
+			border: 2em solid white;
+			border-radius: 50%;
+			width: 7.5em;
+		}
+
+		h2 sub {
+			text-transform: none;
+			color: #AAA;
+		}
+
+		.center {
+			display: block !important;
+			text-align: center !important;
+			width: 100% !important;
+		}
+
+		.table {
+			display: table;
+			margin: 1em auto !important;
+			border: 1px groove white !important;
+		}
+
+		.table .row {
+			display: table-row;
+		}
+
+		.table .row .cell {
+			display: table-cell;
+			border: 1px groove white;
+			padding: 0.125em;
+		}
+
+		.table .row .cell img {
+			width: 1em;
+			border: 0;
+			background: 0;
+			padding: 0;
+			margin: 0;
+			margin-top: 0.125em;
+		}
+	</style>
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<!--
+			WebVTT Wishlist from Subtitle Specialist
+			- renderer checklist: ASS, chrome, firefox, edge, IE11, iOS Safari
+			- who am I: Daiz, @Daiz42, FAKKU!
+			- explain state of art: ASS, with libass & vsfilter
+			- overview: sensible defaults, customizable rendering
+			- frame accurate rendering (togglable, heuristic based on framerate)
+			- css text-outline, text-shadow takes it into account (explain why -webkit-text-stroke is bad)
+			- css text-scaling
+			- default CSS properties that WebVTT support requires (partially there)
+			- sensible default styles (font size, sans font, bold, contrast, fill, border, shadow)
+			- timing overlaps (iOS fails here)
+			- position improvements (line:-X should work like \an2, percentages)
+			- alignment & inner alignment (these need to be added)
+			- subs bound to video frame
+			- subs scale to video element
+			- default style with noto sans (SIL, "aims to support all languages with a harmonious look and feel")
+			- scoped css embedded into vtt (shadow dom)
+		-->
+	<div class="reveal">
+		<div class="slides">
+			<!-- #region Intro -->
+			<section>
+				<h1>WebVTT Wishlist from a Subtitle Specialist</h1>
+			</section>
+			<section>
+				<h2>Daiz</h2>
+				<img class="avatar" src="data/avatar-remilia-huge.png">
+				<h2><sub>@Daiz42</sub></h2>
+			</section>
+			<!-- #endregion -->
+			<!-- #region State of the Art -->
+			<section>
+				<h2>State of the Art</h2>
+				<ul>
+					<li class="fragment">Advanced SubStation Alpha (ASS)</li>
+					<li class="fragment">libass &amp; VSFilter</li>
+					<li class="fragment">Used by VLC, mplayer/mpv, MPC-HC, etc.</li>
+					<li class="fragment">Authored with Aegisub <div class="center"><img src="data/aegisub.png"></div>
+					</li>
+				</ul>
+			</section>
+			<section>
+				<img src="data/typesetting.png">
+			</section>
+			<!-- #endregion -->
+			<!-- #region Rendering Goals -->
+			<section>
+				<h2>Rendering Goals</h2>
+				<img src="data/sample-subs.png">
+			</section>
+			<section>
+				<h2>Rendering Goals</h2>
+				<img src="data/sample-no-sans.png">
+			</section>
+			<section>
+				<h2>Rendering Goals</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ HMM: ️️⚠️ NO: ❌ -->
+							<div class="cell">✅</div><!-- ASS -->
+							<div class="cell">❌</div><!-- Chrome -->
+							<div class="cell">❌</div><!-- Firefox -->
+							<div class="cell">❌</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">❌</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Frame Accuracy -->
+			<section>
+				<h2>Frame Accuracy</h2>
+				<ul class="fragment">
+					<li>Align cue changes to frame changes</li>
+					<li>Should be configurable</li>
+					<li>Simple heuristics for default behavior</li>
+					<li class="fragment">Huge topic in itself</li>
+				</ul>
+			</section>
+			<section>
+				<h2>Frame Accuracy</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ HMM: ⚠️ NO: ❌ -->
+							<div class="cell">✅</div><!-- ASS -->
+							<div class="cell">❌</div><!-- Chrome -->
+							<div class="cell">❌</div><!-- Firefox -->
+							<div class="cell">❌</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">❌</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Subtitle Borders -->
+			<section>
+				<h2>Subtitle Borders</h2>
+				<ul>
+					<li class="fragment"><code>-webkit-text-stroke</code> insufficient</li>
+					<li class="fragment">CSS proposal for outer stroke: <code>text-outline</code></li>
+					<li class="fragment"><code>text-shadow</code> should account for <code>text-outline</code></li>
+				</ul>
+				<img class="fragment" src="data/stroke.png">
+			</section>
+			<section>
+				<h2>Subtitle Borders</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ HMM: ⚠️ NO: ❌ -->
+							<div class="cell">✅</div><!-- ASS -->
+							<div class="cell">❌</div><!-- Chrome -->
+							<div class="cell">❌</div><!-- Firefox -->
+							<div class="cell">❌</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">❌</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Subtitle Positioning -->
+			<section>
+				<h2>Subtitle Positioning</h2>
+				<p>Subtitles should remain anchored to video frame</p>
+				<div class="center"><img src="data/positioning.png"></div>
+			</section>
+			<section>
+				<h2>Subtitle Positioning</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ NO: ❌ -->
+							<div class="cell">✅</div><!-- ASS -->
+							<div class="cell">❌</div><!-- Chrome -->
+							<div class="cell">❌</div><!-- Firefox -->
+							<div class="cell">❌</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">✅</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Subtitle Scaling -->
+			<section>
+				<h2>Subtitle Scaling</h2>
+				<p>Subtitles should scale with video display size</p>
+				<div class="center"><img src="data/scaling.png"></div>
+			</section>
+			<section>
+				<h2>Subtitle Scaling</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ NO: ❌ -->
+							<div class="cell">✅</div><!-- ASS -->
+							<div class="cell">⚠️</div><!-- Chrome -->
+							<div class="cell">⚠️</div><!-- Firefox -->
+							<div class="cell">⚠️</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">⚠️</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Overlapping subtitles -->
+			<section>
+				<h2>Overlapping Subtitles</h2>
+				<pre><code data-trim data-noescape>
+					00:00:05.000 --> 00:00:15.000 line:-1
+					This line will get an overlap.
+					
+					00:00:10.000 --> 00:00:20.000 line:-2
+					This line is the overlap.
+				</code></pre>
+			</section>
+			<section>
+				<h2>Overlapping Subtitles</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ NO: ❌ -->
+							<div class="cell">✅</div><!-- ASS -->
+							<div class="cell">✅</div><!-- Chrome -->
+							<div class="cell">✅</div><!-- Firefox -->
+							<div class="cell">⚠️</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">❌</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Subtitle Alignment -->
+			<section>
+				<h2>Subtitle Alignment</h2>
+				<ul>
+					<li>Swap <code>line:X/-X</code> position logic</li>
+					<li>Keep <code>line:X%</code> as-is</li>
+				</ul>
+				<img src="data/line-positions.png">
+			</section>
+			<section>
+				<h2>Subtitle Alignment</h2>
+				<ul>
+					<li>Add new alignment properties</li>
+					<li>Box (outer) alignment: numpad notation</li>
+					<li>Text (inner) alignment: <code>text-align</code></li>
+				</ul>
+				<img src="data/alignment2.png">
+			</section>
+			<section>
+				<h2>Subtitle Alignment</h2>
+				<div class="center">
+					<div class="table">
+						<div class="row">
+							<div class="cell"><img src="data/aegisub.png"></div>
+							<div class="cell"><img src="data/chrome.png"></div>
+							<div class="cell"><img src="data/firefox.png"></div>
+							<div class="cell"><img src="data/edge.png"></div>
+							<!--<div class="cell"><img src="data/ie.png"></div>-->
+							<div class="cell"><img src="data/safari-ios.png"></div>
+						</div>
+						<div class="row">
+							<!-- YES: ✅ NO: ❌ -->
+							<div class="cell">⚠️</div><!-- ASS -->
+							<div class="cell">❌</div><!-- Chrome -->
+							<div class="cell">❌</div><!-- Firefox -->
+							<div class="cell">❌</div><!-- Edge -->
+							<!--<div class="cell">❌</div>-->
+							<!-- IE11 -->
+							<div class="cell">❌</div><!-- iOS Safari -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Sensible Defaults -->
+			<section>
+				<h2>Sensible Defaults</h2>
+				<img class="fragment" src="data/sample.png">
+				<ul>
+					<li class="fragment">Noto Sans (Open multi-lingual font by Google)</li>
+					<li class="fragment">Dev customizable</li>
+					<li class="fragment">But stick to spec</li>
+				</ul>
+			</section>
+			<!-- #endregion -->
+			<!-- #region Miscellaneous -->
+			<section>
+				<h2>Miscellaneous</h2>
+				<ul>
+					<li>Embedded Styling</li>
+					<li>Device Profiles</li>
+					<li>New Features (eg. fades)</li>
+				</ul>
+			</section>
+			<!-- #endregion -->
+			<section>
+				<h2>That's it</h2>
+				<img src="data/signs2.jpg">
+			</section>
+		</div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+			]
+		});
+	</script>
+</body>
+
+</html>
